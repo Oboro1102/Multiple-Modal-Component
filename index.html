@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="Multiple Modal">
+	<meta name="author" content="Oboro">
+	<title>Multiple Modal</title>
+	<link href="css/bootstrap-reboot.min.css" rel="stylesheet" type="text/css" />
+	<link href="css/main.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	<section>
+		<h1>Multiple Modal</h1>
+		<div class="content">
+			<div class="content__wrap">
+				<div class="content__item" v-for="(item,index) in contentData" :key="index">
+					<h4>{{item.title}}</h4>
+					<button class="button" v-for="btn in item.category" @click="showContent(btn)">{{btn.title}}</button>
+				</div>
+				<transition name="scale" mode="in-out" appear>
+					<modal v-if="isShow" @hide="isShow = false" :modal-data="modalData" />
+				</transition>
+			</div>
+		</div>
+	</section>
+
+	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+	<script>
+		let modal = {
+			props: ['modalData'],
+			template: `
+			<div class="content__item__modal" @click.self="$emit('hide')">
+				<div class="content__item__modal__wrap">
+					<h4 class="content__item__modal__wrap__header">{{modalData.title}}</h4>
+					<div class="content__item__modal__wrap__content">{{modalData.content}}</div>
+					<div class="content__item__modal__wrap__footer" @click="$emit('hide')">
+						<button type="button" class="button button--close">close modal</button>
+					</div>
+				</div>          
+			</div>`,
+		};
+
+		const vm = new Vue({
+			el: '.content',
+			components: {
+				'modal': modal,
+			},
+			data() {
+				return {
+					isShow: false,
+					modalData: null,
+					contentData: [{
+						title: 'Category 1',
+						category: [{
+							title: 'Content 1-1',
+							content: 'There will show 1-1 content......'
+						}, {
+							title: 'Content 1-2',
+							content: 'There will show 1-2 content......'
+						}, {
+							title: 'Content 1-3',
+							content: 'There will show 1-3 content......'
+						}],
+					}, {
+						title: 'Category 2',
+						category: [{
+							title: 'Content 2-1',
+							content: 'There will show 2-1 content......'
+						}, {
+							title: 'Content 2-2',
+							content: 'There will show 2-2 content......'
+						}, {
+							title: 'Content 2-3',
+							content: 'There will show 2-3 content......'
+						}],
+					}],
+				}
+			},
+			methods: {
+				showContent(element) {
+					this.modalData = element;
+					this.isShow = true;
+				},
+			},
+			watch: {
+				isShow() {
+					return this.isShow ? this.$el.offsetParent.classList.add('scrollFixed') : this.$el.offsetParent.classList.remove('scrollFixed');
+				}
+			},
+		});
+	</script>
+
+</body>
+
+</html>
