@@ -36,8 +36,8 @@
 				<div class="content__item__modal__wrap">
 					<h4 class="content__item__modal__wrap__header">{{modalData.title}}</h4>
 					<div class="content__item__modal__wrap__content">{{modalData.content}}</div>
-					<div class="content__item__modal__wrap__footer" @click="$emit('hide')">
-						<button type="button" class="button button--close">close modal</button>
+					<div class="content__item__modal__wrap__footer">
+						<button type="button" class="button button--close" @click="$emit('hide')">close modal</button>
 					</div>
 				</div>          
 			</div>`,
