@@ -12,11 +12,11 @@
 </head>
 
 <body>
-	<section>
+	<main>
 		<h1>Multiple Modal</h1>
-		<div class="content">
-			<div class="content__wrap">
-				<div class="content__item" v-for="(item,index) in contentData" :key="index">
+		<section class="modal">
+			<div class="modal__category">
+				<div class="modal__category__item" v-for="(item,index) in contentData" :key="index">
 					<h4>{{item.title}}</h4>
 					<button class="button" v-for="btn in item.category" @click="showContent(btn)">{{btn.title}}</button>
 				</div>
@@ -24,27 +24,27 @@
 					<modal v-if="isShow" @hide="isShow = false" :modal-data="modalData" />
 				</transition>
 			</div>
-		</div>
-	</section>
+		</section>
+	</main>
 
 	<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 	<script>
 		let modal = {
 			props: ['modalData'],
 			template: `
-			<div class="content__item__modal" @click.self="$emit('hide')">
-				<div class="content__item__modal__wrap">
-					<h4 class="content__item__modal__wrap__header">{{modalData.title}}</h4>
-					<div class="content__item__modal__wrap__content">{{modalData.content}}</div>
-					<div class="content__item__modal__wrap__footer">
-						<button type="button" class="button button--close" @click="$emit('hide')">close modal</button>
+			<div class="modal__content" @click.self="$emit('hide')">
+				<div class="modal__content__wrap">
+					<h4 class="modal__content__wrap__header">{{modalData.title}}</h4>
+					<div class="modal__content__wrap__content">{{modalData.content}}</div>
+					<div class="modal__content__wrap__footer">
+						<button type="button" class="button button--close" @click="$emit('hide')">close</button>
 					</div>
 				</div>          
 			</div>`,
 		};
 
 		const vm = new Vue({
-			el: '.content',
+			el: '.modal',
 			components: {
 				'modal': modal,
 			},
@@ -52,7 +52,11 @@
 				return {
 					isShow: false,
 					modalData: null,
-					contentData: [{
+				}
+			},
+			computed: {
+				contentData() {
+					return [{
 						title: 'Category 1',
 						category: [{
 							title: 'Content 1-1',
@@ -76,7 +80,12 @@
 							title: 'Content 2-3',
 							content: 'There will show 2-3 content......'
 						}],
-					}],
+					}]
+				}
+			},
+			watch: {
+				isShow() {
+					return this.isShow ? this.$el.offsetParent.classList.add('scrollFixed') : this.$el.offsetParent.classList.remove('scrollFixed');
 				}
 			},
 			methods: {
@@ -84,11 +93,6 @@
 					this.modalData = element;
 					this.isShow = true;
 				},
-			},
-			watch: {
-				isShow() {
-					return this.isShow ? this.$el.offsetParent.classList.add('scrollFixed') : this.$el.offsetParent.classList.remove('scrollFixed');
-				}
 			},
 		});
 	</script>
